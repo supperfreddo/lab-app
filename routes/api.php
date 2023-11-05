@@ -1,19 +1,23 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\LabResultController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
+// Token authentication
+Route::post('/tokens', [UserController::class, 'createToken']);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Lab results
+Route::get('/labresults/{code}', [LabResultController::class, 'retrieveByCode']);
+
+// Authenticated routes
+Route::middleware('apitoken')->group(function () {
+    // Token authentication
+    Route::get('/logout', [UserController::class, 'deleteToken']);
+
+    // Lab results
+    Route::get('/labresults', [LabResultController::class, 'retrieve']);
+    Route::post('/labresults', [LabResultController::class, 'store']);
 });
+
+// TODO add postman collection to repo
