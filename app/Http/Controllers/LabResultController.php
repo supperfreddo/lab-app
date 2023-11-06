@@ -11,7 +11,7 @@ class LabResultController extends Controller
     {
         // Retrieve all lab results decrypted
         $labResults = collect();
-        foreach(LabResult::all() as $labResult)
+        foreach (LabResult::all() as $labResult)
             $labResults->push($labResult->withDecryptedData());
 
         // Return a response
@@ -66,6 +66,7 @@ class LabResultController extends Controller
     {
         // Store the lab result
         $labResult = new LabResult();
+        $labResult->setKey();
         $labResult->setCode($request->code);
         $labResult->setResult($request->result);
         $labResult->save();

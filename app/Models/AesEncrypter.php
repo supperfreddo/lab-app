@@ -8,19 +8,10 @@ use Illuminate\Encryption\Encrypter;
 class AesEncrypter extends Encrypter
 {
 
-    public function __construct($key_id)
+    public function __construct($key)
     {
         // Initialize the parent constructor
-        parent::__construct(hex2bin($this->getKeyById($key_id)), 'AES-256-CBC');
-    }
-
-    public function getKeyById($key_id)
-    {
-        $key = EncryptionKey::find($key_id);
-        if(isset($key))
-            return $key->key;
-        else
-            return env('AES_KEY');
+        parent::__construct($key, 'AES-256-CBC');
     }
 
     public function encryptGUID($guid)
