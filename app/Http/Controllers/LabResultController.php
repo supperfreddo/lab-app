@@ -9,8 +9,10 @@ class LabResultController extends Controller
 {
     public function retrieve()
     {
-        // Retrieve all lab results
-        $labResults = LabResult::all();
+        // Retrieve all lab results decrypted
+        $labResults = collect();
+        foreach(LabResult::all() as $labResult)
+            $labResults->push($labResult->withDecryptedData());
 
         // Return a response
         return response()->json([
@@ -24,24 +26,29 @@ class LabResultController extends Controller
         // Return a response
         return response()->json([
             'message' => 'Successfully retrieved lab result',
-            'data' => $labResult
+            'data' => $labResult->withDecryptedData(),
         ], 200);
     }
 
-    public function retrieveByCode($code){
+    public function retrieveByCode($code)
+    {
         // Validate code
-        if(!preg_match('/^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/i', $code)){
+        if (!preg_match('/^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/i', $code)) {
             return response()->json([
                 'message' => 'Invalid code',
                 'data' => null
             ], 400);
         }
 
-        // Retrieve the lab result
-        $labResult = LabResult::where('code', $code)->first();
+        // Retrieve the lab results
+        $labResults = collect();
+        foreach (LabResult::all() as $labResult) {
+            if ($labResult->getDecryptedCode() === $code)
+                $labResults->push($labResult->withDecryptedData());
+        }
 
-        // Check if lab result exists
-        if(!$labResult){
+        // Check if lab results exists
+        if ($labResults->isEmpty()) {
             return response()->json([
                 'message' => 'Lab result not found',
                 'data' => null
@@ -51,7 +58,7 @@ class LabResultController extends Controller
         // Return a response
         return response()->json([
             'message' => 'Successfully retrieved lab result',
-            'data' => $labResult
+            'data' => $labResults,
         ], 200);
     }
 
@@ -59,14 +66,14 @@ class LabResultController extends Controller
     {
         // Store the lab result
         $labResult = new LabResult();
-        $labResult->code = $request->code;
-        $labResult->result = $request->result;
+        $labResult->setCode($request->code);
+        $labResult->setResult($request->result);
         $labResult->save();
 
         // Return a response
         return response()->json([
             'message' => 'Successfully stored lab result',
-            'data' => $labResult
+            'data' => $labResult->withDecryptedData(),
         ], 201);
     }
 }
