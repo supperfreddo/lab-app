@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/tokens', [UserController::class, 'createToken']);
 
 // Lab results
-Route::get('/labresults/{code}', [LabResultController::class, 'retrieveByCode']);
+Route::get('/labresults/{code}', [LabResultController::class, 'retrieveByCodeApi']);
 
 // Authenticated routes
 Route::middleware('apitoken')->group(function () {
@@ -17,7 +17,7 @@ Route::middleware('apitoken')->group(function () {
 
     // Lab results
     Route::get('/labresults', [LabResultController::class, 'retrieve']);
-    Route::post('/labresults', [LabResultController::class, 'store']);
+    Route::post('/labresults', [LabResultController::class, 'storeApi']);
 });
 
 // TODO add postman collection to repo

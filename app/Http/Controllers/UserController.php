@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginApiRequest;
 use App\Models\User;
+use Auth;
 use Crypt;
 use Illuminate\Http\Request;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -47,5 +48,26 @@ class UserController extends Controller
             'message' => 'Successfully logged out',
             'data' => null
         ], 200);
+    }
+
+    public function login(Request $request){
+        $request->validate([
+            'username' => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        // Check if email exists & password is correct
+        $user = User::where('email', $request->username)->first();
+        if (!isset($user) || Crypt::decrypt($user->password) != $request->password) {
+            return redirect()->route('login')->withErrors([
+                'username' => 'Username or password incorrect'
+            ], 'user');
+        }
+
+        // Set authenticated user
+        Auth::login($user);
+        
+        // Return a view
+        return redirect()->route('home');
     }
 }

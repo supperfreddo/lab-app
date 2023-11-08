@@ -10,6 +10,7 @@ First install the project by running `composer install`. After that create the .
 
 <!-- ## API -->
 <!-- explain endpoints and which are authenticaded -->
+<!-- explain postman file -->
 
 <!-- ## Encryption -->
 <!-- explain how encryption of data is done with rotation keys -->

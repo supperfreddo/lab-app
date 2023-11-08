@@ -59,7 +59,7 @@ class LabResult extends Model
     public function withDecryptedData()
     {
         $this->code_decrypted = $this->getDecryptedCode();
-        $this->result_decrypted = $this->getDecryptedCode();
+        $this->result_decrypted = $this->getDecryptedResult();
         return $this;
     }
 

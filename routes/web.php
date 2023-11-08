@@ -1,18 +1,23 @@
 <?php
 
+use App\Http\Controllers\LabResultController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
+// Login page
 Route::get('/', function () {
-    return view('welcome');
-})->name("welcome");
+    if (Auth::user() != null)
+        return redirect()->route('home');
+    return view('login');
+})->name("login");
+Route::post('/login', [UserController::class, 'login'])->name("loginPost");
+
+// Lab results
+Route::get('/labresults/{code}', [LabResultController::class, 'retrieveByCodeWeb']);
+
+// Authenticated routes
+Route::middleware('auth')->group(function () {
+    // store lab results
+    Route::get('/home', [LabResultController::class, 'storeLabResult'])->name("home");
+    Route::post('/labresults', [LabResultController::class, 'storeWeb'])->name("storeLabResult");
+});
