@@ -36,28 +36,33 @@ class LabResult extends Model
 
     private function setAesEncrypter()
     {
+        // Set AES encrypter
         $this->aesEncrypter = new AesEncrypter(hex2bin($this->EncryptionKey->key));
     }
 
     public function setKey()
     {
+        // Set random key from db
         $this->attributes['key_id'] = EncryptionKey::where('active', 1)->get()->random(1)->first()->id;
     }
 
     public function setCode($code)
     {
+        // Set encrypted code
         $this->setAesEncrypter();
         $this->attributes['code'] = $this->aesEncrypter->encryptGUID($code);
     }
 
     public function setResult($result)
     {
+        // Set encrypted result
         $this->setAesEncrypter();
         $this->attributes['result'] = $this->aesEncrypter->encryptBoolean($result);
     }
 
     public function withDecryptedData()
     {
+        // Set decrypted data
         $this->code_decrypted = $this->getDecryptedCode();
         $this->result_decrypted = $this->getDecryptedResult();
         return $this;

@@ -31,7 +31,8 @@ class LabResultController extends Controller
         ], 200);
     }
 
-    private function retrieveByCode($code){
+    private function retrieveByCode($code)
+    {
         // Retrieve the lab results
         $labResults = collect();
         foreach (LabResult::all() as $labResult) {
@@ -41,7 +42,8 @@ class LabResultController extends Controller
         return $labResults;
     }
 
-    public function retrieveByCodeWeb($code){
+    public function retrieveByCodeWeb($code)
+    {
         // Retrieve the lab results
         $labResults = $this->retrieveByCode($code);
 
@@ -52,7 +54,7 @@ class LabResultController extends Controller
             ], 'labresults');
         }
 
-        // Return a response
+        // Return view
         return view('labresults', [
             'labResults' => $labResults,
         ]);
@@ -99,7 +101,8 @@ class LabResultController extends Controller
         return $labResult->withDecryptedData();
     }
 
-    public function storeApi(LabResultStoreRequest $request){
+    public function storeApi(LabResultStoreRequest $request)
+    {
         // Store the lab result
         $labResult = $this->store($request->code, $request->result);
 
@@ -110,7 +113,8 @@ class LabResultController extends Controller
         ], 201);
     }
 
-    public function storeWeb(Request $request){
+    public function storeWeb(Request $request)
+    {
         // Validate the request
         $request->validate([
             'code' => 'required|string',
@@ -126,14 +130,16 @@ class LabResultController extends Controller
         // Store the lab result
         $labResult = $this->store($request->code, isset($request->result));
 
-        // Return a response
+        // Return view
         return view('storelabresult')->with([
             'successMessage' => 'Successfully stored lab result!',
             'data' => $labResult->withDecryptedData(),
         ]);
     }
 
-    public function storeLabResult(){
+    public function storeLabResult()
+    {
+        // Return view
         return view('storelabresult');
     }
 }

@@ -19,5 +19,3 @@ Route::middleware('apitoken')->group(function () {
     Route::get('/labresults', [LabResultController::class, 'retrieve']);
     Route::post('/labresults', [LabResultController::class, 'storeApi']);
 });
-
-// TODO add postman collection to repo

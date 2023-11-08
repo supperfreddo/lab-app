@@ -51,6 +51,7 @@ class UserController extends Controller
     }
 
     public function login(Request $request){
+        // Validate request
         $request->validate([
             'username' => 'required|email',
             'password' => 'required|string',
@@ -67,7 +68,7 @@ class UserController extends Controller
         // Set authenticated user
         Auth::login($user);
         
-        // Return a view
+        // Return view
         return redirect()->route('home');
     }
 }
